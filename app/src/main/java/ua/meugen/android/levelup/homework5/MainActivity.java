@@ -1,7 +1,7 @@
 package ua.meugen.android.levelup.homework5;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 
 import java.math.BigInteger;
@@ -33,7 +33,7 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         this.recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        this.recyclerView.setLayoutManager(new CustomLayoutManager(this));
+        RecyclerSetupHelper.setup(this.recyclerView);
         setupAdapter();
     }
 
