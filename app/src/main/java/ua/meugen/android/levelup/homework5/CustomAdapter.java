@@ -1,27 +1,51 @@
 package ua.meugen.android.levelup.homework5;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
-public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH> {
+public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
+        implements View.OnClickListener {
+
+    private static final String CHECKED_POSITIONS_KEY = "checkedPositions";
+    private static final String ITEMS_KEY = "items";
 
     private final LayoutInflater inflater;
+    private Set<Integer> checkedPositions;
     private List<String> items;
 
-    public CustomAdapter(final Context context) {
+    private CustomAdapter(@NonNull final Context context) {
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void reload(final List<String> items) {
+    public CustomAdapter(@NonNull final Context context, @NonNull final Bundle state) {
+        this(context);
+        this.checkedPositions = new HashSet<>(state.getIntegerArrayList(
+                CHECKED_POSITIONS_KEY));
+        this.items = state.getStringArrayList(ITEMS_KEY);
+    }
+
+    public CustomAdapter(@NonNull final Context context, @NonNull final List<String> items) {
+        this(context);
+        this.checkedPositions = new HashSet<>();
         this.items = items;
-        notifyDataSetChanged();
+    }
+
+    public void saveState(final Bundle outState) {
+        outState.putStringArrayList(ITEMS_KEY, new ArrayList<>(this.items));
+        outState.putIntegerArrayList(CHECKED_POSITIONS_KEY, new ArrayList<>(
+                this.checkedPositions));
     }
 
     @Override
@@ -32,6 +56,20 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH> 
     @Override
     public void onBindViewHolder(final VH holder, final int position) {
         holder.setText(items.get(position));
+        holder.setChecked(checkedPositions
+                .contains(position));
+        holder.setListener(this, position);
+    }
+
+    @Override
+    public void onClick(final View view) {
+        final Integer position = (Integer) view.getTag();
+        if (this.checkedPositions.contains(position)) {
+            this.checkedPositions.remove(position);
+        } else {
+            this.checkedPositions.add(position);
+        }
+        notifyItemChanged(position);
     }
 
     @Override
@@ -50,6 +88,15 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH> 
 
         public void setText(final CharSequence text) {
             checkedTextView.setText(text);
+        }
+
+        public void setChecked(final boolean checked) {
+            checkedTextView.setChecked(checked);
+        }
+
+        public void setListener(final View.OnClickListener listener, final Object tag) {
+            checkedTextView.setOnClickListener(listener);
+            checkedTextView.setTag(tag);
         }
     }
 }
