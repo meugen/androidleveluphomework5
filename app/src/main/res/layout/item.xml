@@ -14,6 +14,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:checkMark="@drawable/ic_check_box_selector"
         android:gravity="center"
-        android:minWidth="100dp"/>
+        android:minWidth="100dp"
+        android:lines="1"
+        android:ellipsize="end"/>
 
 </LinearLayout>

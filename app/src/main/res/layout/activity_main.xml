@@ -7,11 +7,34 @@
     android:layout_height="match_parent"
     tools:context="ua.meugen.android.levelup.homework5.MainActivity"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:weightSum="1.0">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycler"/>
+        android:layout_height="0dp"
+        android:id="@+id/recycler"
+        android:layout_weight="1.0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:id="@+id/new_value"
+            android:hint="@string/new_value_hint"
+            android:lines="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/add"
+            android:text="@string/button_add_text"/>
+
+    </LinearLayout>
 
 </LinearLayout>

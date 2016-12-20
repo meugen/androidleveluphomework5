@@ -77,6 +77,13 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
         return items.size();
     }
 
+    public int add(final String newValue) {
+        this.items.add(newValue);
+        final int position = this.items.size() - 1;
+        notifyItemRangeInserted(position, 1);
+        return position;
+    }
+
     public static final class VH extends RecyclerView.ViewHolder {
 
         private final CheckedTextView checkedTextView;
