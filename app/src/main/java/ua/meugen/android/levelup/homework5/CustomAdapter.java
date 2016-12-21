@@ -3,6 +3,7 @@ package ua.meugen.android.levelup.homework5;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.CheckedTextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 
@@ -93,10 +96,36 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     public int add(final String newValue) {
         this.items.add(newValue);
         final int position = this.items.size() - 1;
-        notifyItemRangeInserted(position, 1);
+        notifyItemInserted(position);
 
         callListener();
         return position;
+    }
+
+    public void removeChecked() {
+        final List<String> newItems = new ArrayList<>(
+                this.items.size() - this.checkedPositions.size());
+        final ListIterator<String> iterator = this.items.listIterator();
+        while (iterator.hasNext()) {
+            final int index = iterator.nextIndex();
+            final String item = iterator.next();
+            if (!this.checkedPositions.contains(index)) {
+                newItems.add(item);
+            }
+        }
+        this.checkedPositions.clear();
+        reload(newItems);
+        callListener();
+    }
+
+    private void reload(final List<String> newItems) {
+        final List<String> oldItems = this.items;
+        this.items = newItems;
+
+        final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                new CallbackImpl(oldItems, newItems));
+        result.dispatchUpdatesTo(this);
+//        notifyDataSetChanged();
     }
 
     private void callListener() {
@@ -131,5 +160,36 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     public interface OnSizeChangedListener {
 
         void onSizeChanged(int count, int checked);
+    }
+}
+
+final class CallbackImpl extends DiffUtil.Callback {
+
+    private final List<String> oldItems;
+    private final List<String> newItems;
+
+    public CallbackImpl(final List<String> oldItems, final List<String> newItems) {
+        this.oldItems = oldItems;
+        this.newItems = newItems;
+    }
+
+    @Override
+    public int getOldListSize() {
+        return oldItems.size();
+    }
+
+    @Override
+    public int getNewListSize() {
+        return newItems.size();
+    }
+
+    @Override
+    public boolean areItemsTheSame(final int oldItemPosition, final int newItemPosition) {
+        return false;
+    }
+
+    @Override
+    public boolean areContentsTheSame(final int oldItemPosition, final int newItemPosition) {
+        return oldItems.get(oldItemPosition).equals(newItems.get(newItemPosition));
     }
 }

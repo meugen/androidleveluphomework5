@@ -3,4 +3,5 @@
 
     <string name="button_add_text">Add</string>
     <string name="new_value_hint">Random if empty</string>
+    <string name="button_remove_checked_text">Remove checked</string>
 </resources>

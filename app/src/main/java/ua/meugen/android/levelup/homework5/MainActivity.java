@@ -29,6 +29,7 @@ public final class MainActivity extends AppCompatActivity
 
         this.newValueView = (EditText) findViewById(R.id.new_value);
         findViewById(R.id.add).setOnClickListener(this);
+        findViewById(R.id.remove_checked).setOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         RecyclerSetupHelper.setup(recyclerView);
@@ -46,7 +47,7 @@ public final class MainActivity extends AppCompatActivity
         final int count = Math.max(10, RANDOM.nextInt(COUNT));
         final List<String> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            result.add(randomString());
+            result.add("" + i + ". " + randomString());
         }
         return result;
     }
@@ -66,6 +67,8 @@ public final class MainActivity extends AppCompatActivity
         final int viewId = view.getId();
         if (viewId == R.id.add) {
             add();
+        } else if (viewId == R.id.remove_checked) {
+            removeChecked();
         }
     }
 
@@ -76,6 +79,10 @@ public final class MainActivity extends AppCompatActivity
         }
         final int position = this.adapter.add(newValue);
         this.recyclerView.scrollToPosition(position);
+    }
+
+    private void removeChecked() {
+        this.adapter.removeChecked();
     }
 
     @Override
