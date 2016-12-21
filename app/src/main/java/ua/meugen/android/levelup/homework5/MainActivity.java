@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public final class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public final class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, CustomAdapter.OnCheckedCountChangedListener {
 
     private static final Random RANDOM = new Random();
     private static final int COUNT = 100;
@@ -38,6 +39,7 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         } else {
             this.adapter = new CustomAdapter(this, savedInstanceState);
         }
+        this.adapter.setListener(this);
         recyclerView.setAdapter(this.adapter);
     }
 
@@ -75,5 +77,10 @@ public final class MainActivity extends AppCompatActivity implements View.OnClic
         }
         final int position = this.adapter.add(newValue);
         this.recyclerView.scrollToPosition(position);
+    }
+
+    @Override
+    public void onCheckedCountChanged(final int count) {
+        setTitle("Checked count: " + count);
     }
 }
