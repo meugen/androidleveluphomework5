@@ -15,7 +15,7 @@ public final class MainActivity extends AppCompatActivity
         implements View.OnClickListener, CustomAdapter.OnSizeChangedListener {
 
     private static final Random RANDOM = new Random();
-    private static final int COUNT = 100;
+    private static final int COUNT = 20_000;
 
     private CustomAdapter adapter;
 
@@ -44,9 +44,8 @@ public final class MainActivity extends AppCompatActivity
     }
 
     private static List<String> genDumpData() {
-        final int count = Math.max(10, RANDOM.nextInt(COUNT));
-        final List<String> result = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
+        final List<String> result = new ArrayList<>(COUNT);
+        for (int i = 0; i < COUNT; i++) {
             result.add("" + i + ". " + randomString());
         }
         return result;

@@ -119,13 +119,13 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     }
 
     private void reload(final List<String> newItems) {
-        final List<String> oldItems = this.items;
+//        final List<String> oldItems = this.items;
         this.items = newItems;
 
-        final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
-                new CallbackImpl(oldItems, newItems));
-        result.dispatchUpdatesTo(this);
-//        notifyDataSetChanged();
+//        final DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+//                new CallbackImpl(oldItems, newItems));
+//        result.dispatchUpdatesTo(this);
+        notifyDataSetChanged();
     }
 
     private void callListener() {
@@ -163,33 +163,33 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     }
 }
 
-final class CallbackImpl extends DiffUtil.Callback {
-
-    private final List<String> oldItems;
-    private final List<String> newItems;
-
-    public CallbackImpl(final List<String> oldItems, final List<String> newItems) {
-        this.oldItems = oldItems;
-        this.newItems = newItems;
-    }
-
-    @Override
-    public int getOldListSize() {
-        return oldItems.size();
-    }
-
-    @Override
-    public int getNewListSize() {
-        return newItems.size();
-    }
-
-    @Override
-    public boolean areItemsTheSame(final int oldItemPosition, final int newItemPosition) {
-        return false;
-    }
-
-    @Override
-    public boolean areContentsTheSame(final int oldItemPosition, final int newItemPosition) {
-        return oldItems.get(oldItemPosition).equals(newItems.get(newItemPosition));
-    }
-}
+//final class CallbackImpl extends DiffUtil.Callback {
+//
+//    private final List<String> oldItems;
+//    private final List<String> newItems;
+//
+//    public CallbackImpl(final List<String> oldItems, final List<String> newItems) {
+//        this.oldItems = oldItems;
+//        this.newItems = newItems;
+//    }
+//
+//    @Override
+//    public int getOldListSize() {
+//        return oldItems.size();
+//    }
+//
+//    @Override
+//    public int getNewListSize() {
+//        return newItems.size();
+//    }
+//
+//    @Override
+//    public boolean areItemsTheSame(final int oldItemPosition, final int newItemPosition) {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean areContentsTheSame(final int oldItemPosition, final int newItemPosition) {
+//        return oldItems.get(oldItemPosition).equals(newItems.get(newItemPosition));
+//    }
+//}
