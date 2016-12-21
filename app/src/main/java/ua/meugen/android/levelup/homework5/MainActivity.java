@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import java.math.BigInteger;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 public final class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, CustomAdapter.OnCheckedCountChangedListener {
+        implements View.OnClickListener, CustomAdapter.OnSizeChangedListener {
 
     private static final Random RANDOM = new Random();
     private static final int COUNT = 100;
@@ -80,7 +79,7 @@ public final class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCheckedCountChanged(final int count) {
-        setTitle("Checked count: " + count);
+    public void onSizeChanged(final int count, final int checked) {
+        setTitle("" + checked + " items checked of " + count);
     }
 }

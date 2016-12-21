@@ -25,7 +25,7 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     private Set<Integer> checkedPositions;
     private List<String> items;
 
-    private OnCheckedCountChangedListener listener;
+    private OnSizeChangedListener listener;
 
     private CustomAdapter(@NonNull final Context context) {
         this.inflater = LayoutInflater.from(context);
@@ -50,11 +50,11 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
                 this.checkedPositions));
     }
 
-    public OnCheckedCountChangedListener getListener() {
+    public OnSizeChangedListener getListener() {
         return listener;
     }
 
-    public void setListener(final OnCheckedCountChangedListener listener) {
+    public void setListener(final OnSizeChangedListener listener) {
         this.listener = listener;
         callListener();
     }
@@ -94,12 +94,14 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
         this.items.add(newValue);
         final int position = this.items.size() - 1;
         notifyItemRangeInserted(position, 1);
+
+        callListener();
         return position;
     }
 
     private void callListener() {
         if (this.listener != null) {
-            this.listener.onCheckedCountChanged(this.checkedPositions.size());
+            this.listener.onSizeChanged(this.items.size(), this.checkedPositions.size());
         }
     }
 
@@ -126,8 +128,8 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
         }
     }
 
-    public interface OnCheckedCountChangedListener {
+    public interface OnSizeChangedListener {
 
-        void onCheckedCountChanged(int count);
+        void onSizeChanged(int count, int checked);
     }
 }
