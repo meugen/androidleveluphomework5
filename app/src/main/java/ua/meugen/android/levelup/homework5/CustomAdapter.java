@@ -3,19 +3,18 @@ package ua.meugen.android.levelup.homework5;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
+
+import ua.meugen.android.levelup.homework5.parcels.SparseBooleanArrayParcel;
 
 
 public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
@@ -25,7 +24,7 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     private static final String ITEMS_KEY = "items";
 
     private final LayoutInflater inflater;
-    private Set<Integer> checkedPositions;
+    private SparseBooleanArray checkedPositions;
     private List<String> items;
 
     private OnSizeChangedListener listener;
@@ -36,21 +35,25 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
 
     public CustomAdapter(@NonNull final Context context, @NonNull final Bundle state) {
         this(context);
-        this.checkedPositions = new HashSet<>(state.getIntegerArrayList(
-                CHECKED_POSITIONS_KEY));
+        this.checkedPositions = state.<SparseBooleanArrayParcel>getParcelable(
+                CHECKED_POSITIONS_KEY).getArray();
         this.items = state.getStringArrayList(ITEMS_KEY);
     }
 
     public CustomAdapter(@NonNull final Context context, @NonNull final List<String> items) {
         this(context);
-        this.checkedPositions = new HashSet<>();
+        this.checkedPositions = new SparseBooleanArray();
         this.items = items;
     }
 
     public void saveState(final Bundle outState) {
         outState.putStringArrayList(ITEMS_KEY, new ArrayList<>(this.items));
-        outState.putIntegerArrayList(CHECKED_POSITIONS_KEY, new ArrayList<>(
+        outState.putParcelable(CHECKED_POSITIONS_KEY, new SparseBooleanArrayParcel(
                 this.checkedPositions));
+    }
+
+    private boolean isChecked(final int position) {
+        return this.checkedPositions.get(position, false);
     }
 
     public OnSizeChangedListener getListener() {
@@ -70,19 +73,14 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
     @Override
     public void onBindViewHolder(final VH holder, final int position) {
         holder.setText(items.get(position));
-        holder.setChecked(checkedPositions
-                .contains(position));
+        holder.setChecked(isChecked(position));
         holder.setListener(this, position);
     }
 
     @Override
     public void onClick(final View view) {
         final Integer position = (Integer) view.getTag();
-        if (this.checkedPositions.contains(position)) {
-            this.checkedPositions.remove(position);
-        } else {
-            this.checkedPositions.add(position);
-        }
+        this.checkedPositions.put(position, !isChecked(position));
         notifyItemChanged(position);
 
         callListener();
@@ -109,7 +107,7 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
         while (iterator.hasNext()) {
             final int index = iterator.nextIndex();
             final String item = iterator.next();
-            if (!this.checkedPositions.contains(index)) {
+            if (!isChecked(index)) {
                 newItems.add(item);
             }
         }
@@ -152,8 +150,8 @@ public final class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.VH>
         }
 
         public void setListener(final View.OnClickListener listener, final Object tag) {
-            checkedTextView.setOnClickListener(listener);
-            checkedTextView.setTag(tag);
+            itemView.setOnClickListener(listener);
+            itemView.setTag(tag);
         }
     }
 
